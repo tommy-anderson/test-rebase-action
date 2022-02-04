@@ -17,6 +17,7 @@ jobs:
           type: "comment"
           emoji: "+1"
           token: ${{secrets.TEST_SECRET}}
+          comment-id: ${{github.event.comment.id}}
       - name: Checkout the latest code
         uses: actions/checkout@v2
         with:
