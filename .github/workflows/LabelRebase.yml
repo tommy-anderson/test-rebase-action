@@ -18,13 +18,15 @@ jobs:
         with:
           token: ${{ secrets.TEST_SECRET }}
           fetch-depth: 0
+      - name: echo before rebase
+        run: echo '${{github.event.title}}'
       - name: Update issue
         uses: actions-cool/issues-helper@v2
         with:
           actions: "update-issue"
           token: ${{ secrets.TEST_SECRET }}
           issue-number: ${{ github.event.number }}
-          title: format('Rebasing {0}', github.event.title)
+          title: ${{format('Rebasing {0}', github.event.title)}}
           update-mode: "replace"
       - name: automatic rebase
         uses: cirrus-actions/rebase@1.5
@@ -35,6 +37,8 @@ jobs:
         uses: actions-ecosystem/action-remove-labels@v1
         with:
           labels: rebase
+      - name: echo after rebase
+        run: echo '${{github.event.title}}'
       - name: Update issue
         uses: actions-cool/issues-helper@v2
         with:
