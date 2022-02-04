@@ -10,6 +10,9 @@ jobs:
     name: Rebase
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        id: github_context_step
+        run: echo '${{ toJSON(github) }}'
       - name: git checkout
         uses: actions/checkout@v2
         with:
