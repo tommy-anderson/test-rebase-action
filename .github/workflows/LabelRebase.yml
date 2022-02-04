@@ -58,4 +58,4 @@ jobs:
           issue-number: ${{ github.event.number }}
           body: |
             Rebase actin failed for some reason 🤔
-            Check actions or ask for help from DevOps.
+            Check [Actions](https://github.com/Planable/planable-app/actions) or ask for help from DevOps.

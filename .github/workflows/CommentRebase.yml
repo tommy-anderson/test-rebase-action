@@ -49,6 +49,7 @@ jobs:
           token: ${{secrets.TEST_SECRET}}
           comment-id: ${{github.event.comment.id}}
       - name: Failure emoji
+        if: failure()
         uses: actions-cool/emoji-helper@v1.0.0
         with:
           type: "comment"
@@ -72,5 +73,5 @@ jobs:
           token: ${{ secrets.TEST_SECRET }}
           issue-number: ${{ github.event.number }}
           body: |
-            Rebase actin failed for some reason 🤔
-            Check actions or ask for help from DevOps.
+            Rebase action failed for some reason 🤔
+            Check [Actions](https://github.com/Planable/planable-app/actions) or ask for help from DevOps.
