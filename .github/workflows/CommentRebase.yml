@@ -27,3 +27,10 @@ jobs:
         uses: cirrus-actions/rebase@1.5
         env:
           GITHUB_TOKEN: ${{ secrets.TEST_SECRET }}
+      - name: Remove emoji
+        uses: actions-cool/emoji-helper@v1.0.0
+        with:
+          type: "comment"
+          emoji: "+1"
+          token: ${{secrets.TEST_SECRET}}
+          comment-id: ${{github.event.comment.id}}
