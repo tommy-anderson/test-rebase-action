@@ -8,9 +8,6 @@ jobs:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/rebase')
     runs-on: ubuntu-latest
     steps:
-      - name: Dump GitHub context
-        id: github_context_step
-        run: echo '${{ toJSON(github) }}'
       - name: Acknowledge emoji
         uses: actions-cool/emoji-helper@v1.0.0
         with:
@@ -36,6 +33,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TEST_SECRET }}
       - name: Update Title Back
+        if: always()
         uses: actions-cool/issues-helper@v2
         with:
           actions: "update-issue"
@@ -50,8 +48,15 @@ jobs:
           emoji: "hooray"
           token: ${{secrets.TEST_SECRET}}
           comment-id: ${{github.event.comment.id}}
+      - name: Failure emoji
+        uses: actions-cool/emoji-helper@v1.0.0
+        with:
+          type: "comment"
+          emoji: "confused"
+          token: ${{secrets.TEST_SECRET}}
+          comment-id: ${{github.event.comment.id}}
       - name: Update PR Title in case of fail
-        if: failure()
+        # if: failure()
         uses: actions-cool/issues-helper@v2
         with:
           actions: "update-issue"
@@ -59,3 +64,13 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           title: ${{format('{0} ❗️ Rebase Failed ❗️', github.event.issue.title)}}
           update-mode: "replace"
+      - name: Failure comment
+        # if: failure()
+        uses: actions-cool/issues-helper@v2
+        with:
+          actions: "create-comment"
+          token: ${{ secrets.TEST_SECRET }}
+          issue-number: ${{ github.event.number }}
+          body: |
+            Rebase actin failed for some reason 🤔
+            Check actions or ask for help from DevOps.
