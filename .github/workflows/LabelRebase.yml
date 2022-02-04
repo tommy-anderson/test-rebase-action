@@ -16,9 +16,16 @@ jobs:
       - name: git checkout
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.TEST_SECRET }}
           fetch-depth: 0
-
+      - name: Update issue
+        uses: actions-cool/issues-helper@v2
+        with:
+          actions: "update-issue"
+          token: ${{ secrets.TEST_SECRET }}
+          issue-number: ${{ github.event.issue.number }}
+          title: "Rebasing ${{github.event.issue.title}}"
+          update-mode: "replace"
       - name: automatic rebase
         uses: cirrus-actions/rebase@1.5
         env:
@@ -29,3 +36,11 @@ jobs:
         uses: actions-ecosystem/action-remove-labels@v1
         with:
           labels: rebase
+      - name: Update issue
+        uses: actions-cool/issues-helper@v2
+        with:
+          actions: "update-issue"
+          token: ${{ secrets.TEST_SECRET }}
+          issue-number: ${{ github.event.issue.number }}
+          title: "${{github.event.issue.title}}"
+          update-mode: "replace"
