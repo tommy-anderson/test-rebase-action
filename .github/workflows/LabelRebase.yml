@@ -26,7 +26,7 @@ jobs:
           actions: "update-issue"
           token: ${{ secrets.TEST_SECRET }}
           issue-number: ${{ github.event.number }}
-          title: ${{format('{0} ♺ Rebasing ♺', github.pull_request.title)}}
+          title: ${{format('{0} ♺ Rebasing ♺', ${{github.pull_request.title}})}}
           update-mode: "replace"
       - name: automatic rebase
         uses: cirrus-actions/rebase@1.5
