@@ -11,13 +11,21 @@ jobs:
       - name: Dump GitHub context
         id: github_context_step
         run: echo '${{ toJSON(github) }}'
-      - name: Acknowledge rebase
+      - name: Acknowledge emoji
         uses: actions-cool/emoji-helper@v1.0.0
         with:
           type: "comment"
           emoji: "+1"
           token: ${{secrets.TEST_SECRET}}
           comment-id: ${{github.event.comment.id}}
+      - name: Temporarily Update PR Title
+        uses: actions-cool/issues-helper@v2
+        with:
+          actions: "update-issue"
+          token: ${{ secrets.TEST_SECRET }}
+          issue-number: ${{ github.event.number }}
+          title: ${{format('{0} ♺ Rebasing ♺', github.event.pull_request.title)}}
+          update-mode: "replace"
       - name: Checkout the latest code
         uses: actions/checkout@v2
         with:
@@ -27,10 +35,27 @@ jobs:
         uses: cirrus-actions/rebase@1.5
         env:
           GITHUB_TOKEN: ${{ secrets.TEST_SECRET }}
-      - name: Remove emoji
+      - name: Update Title Back
+        uses: actions-cool/issues-helper@v2
+        with:
+          actions: "update-issue"
+          token: ${{ secrets.TEST_SECRET }}
+          issue-number: ${{ github.event.number }}
+          title: ${{github.event.pull_request.title}}
+          update-mode: "replace"
+      - name: Success emoji
         uses: actions-cool/emoji-helper@v1.0.0
         with:
           type: "comment"
-          emoji: "+1"
+          emoji: "hooray"
           token: ${{secrets.TEST_SECRET}}
           comment-id: ${{github.event.comment.id}}
+      - name: Update PR Title in case of fail
+        if: failure()
+        uses: actions-cool/issues-helper@v2
+        with:
+          actions: "update-issue"
+          token: ${{ secrets.TEST_SECRET }}
+          issue-number: ${{ github.event.number }}
+          title: ${{format('{0} ❗️ Rebase Failed ❗️', github.event.pull_request.title)}}
+          update-mode: "replace"

@@ -10,17 +10,12 @@ jobs:
     name: Rebase
     runs-on: ubuntu-latest
     steps:
-      - name: Dump GitHub context
-        id: github_context_step
-        run: echo '${{ toJSON(github) }}'
       - name: git checkout
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.TEST_SECRET }}
           fetch-depth: 0
-      - name: echo before rebase
-        run: echo '${{github.event.pull_request.title}}'
-      - name: Update issue
+      - name: Temporarily Update PR Title
         uses: actions-cool/issues-helper@v2
         with:
           actions: "update-issue"
@@ -37,9 +32,7 @@ jobs:
         uses: actions-ecosystem/action-remove-labels@v1
         with:
           labels: rebase
-      - name: echo after rebase
-        run: echo '${{github.event.pull_request.title}}'
-      - name: Update issue
+      - name: Update Title Back
         uses: actions-cool/issues-helper@v2
         with:
           actions: "update-issue"
@@ -47,3 +40,21 @@ jobs:
           issue-number: ${{ github.event.number }}
           title: ${{github.event.pull_request.title}}
           update-mode: "replace"
+      - name: Update PR Title in case of fail
+        if: failure()
+        uses: actions-cool/issues-helper@v2
+        with:
+          actions: "update-issue"
+          token: ${{ secrets.TEST_SECRET }}
+          issue-number: ${{ github.event.number }}
+          title: ${{format('{0} ❗️ Rebase Failed ❗️', github.event.pull_request.title)}}
+          update-mode: "replace"
+      # - name: Add comment that rebase failed
+      #   if: failure()
+      #   uses: actions-cool/issues-helper@v2
+      #   with:
+      #     actions: "update-issue"
+      #     token: ${{ secrets.TEST_SECRET }}
+      #     issue-number: ${{ github.event.number }}
+      #     title: ${{format('{0} ❗️ Rebase Failed ❗️', github.event.pull_request.title)}}
+      #     update-mode: "replace"
