@@ -30,7 +30,6 @@ jobs:
         uses: cirrus-actions/rebase@1.5
         env:
           GITHUB_TOKEN: ${{ secrets.TEST_SECRET }}
-
       - name: remove label
         if: always()
         uses: actions-ecosystem/action-remove-labels@v1
