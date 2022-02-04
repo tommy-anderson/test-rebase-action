@@ -57,7 +57,7 @@ jobs:
           token: ${{secrets.TEST_SECRET}}
           comment-id: ${{github.event.comment.id}}
       - name: Update PR Title in case of fail
-        # if: failure()
+        if: failure()
         uses: actions-cool/issues-helper@v2
         with:
           actions: "update-issue"
@@ -66,7 +66,7 @@ jobs:
           title: ${{format('{0} ❗️ Rebase Failed ❗️', github.event.issue.title)}}
           update-mode: "replace"
       - name: Failure comment
-        # if: failure()
+        if: failure()
         uses: actions-cool/issues-helper@v2
         with:
           actions: "create-comment"
