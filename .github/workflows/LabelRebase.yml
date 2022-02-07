@@ -16,7 +16,7 @@ jobs:
           token: ${{ secrets.TEST_SECRET }}
           fetch-depth: 0
       - name: Temporarily Update PR Label
-      - uses: actions-ecosystem/action-add-labels@v1
+        uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: rebase-in-progress
           number: ${{ github.event.number }}
