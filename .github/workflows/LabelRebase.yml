@@ -30,7 +30,7 @@ jobs:
         with:
           labels: |
             rebase
-            rebase-in-progress
+            rebasing
       - name: Update PR Label in case of fail
         if: failure()
         - uses: actions-ecosystem/action-add-labels@v1
