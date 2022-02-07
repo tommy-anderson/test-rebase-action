@@ -24,16 +24,13 @@ jobs:
         uses: cirrus-actions/rebase@1.5
         env:
           GITHUB_TOKEN: ${{ secrets.TEST_SECRET }}
-      - name: remove rebase label
+      - name: remove label
         if: always()
         uses: actions-ecosystem/action-remove-labels@v1
         with:
-          labels: rebase
-      - name: remove in progress label
-        if: always()
-        uses: actions-ecosystem/action-remove-labels@v1
-        with:
-          labels: rebase-in-progress
+          labels: |
+            rebase
+            rebase-in-progress
       - name: Update PR Label in case of fail
         if: failure()
         - uses: actions-ecosystem/action-add-labels@v1
