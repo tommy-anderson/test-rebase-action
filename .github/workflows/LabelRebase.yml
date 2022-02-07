@@ -33,7 +33,7 @@ jobs:
             rebase-in-progress
       - name: Update PR Label in case of fail
         if: failure()
-      - uses: actions-ecosystem/action-add-labels@v1
+        uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: rebase-failed
           number: ${{ github.event.number }}
