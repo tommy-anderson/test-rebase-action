@@ -15,14 +15,11 @@ jobs:
         with:
           token: ${{ secrets.TEST_SECRET }}
           fetch-depth: 0
-      - name: Temporarily Update PR Title
-        uses: actions-cool/issues-helper@v2
+      - name: Temporarily Update PR Label
+      - uses: actions-ecosystem/action-add-labels@v1
         with:
-          actions: "update-issue"
-          token: ${{ secrets.TEST_SECRET }}
-          issue-number: ${{ github.event.number }}
-          title: ${{format('{0} ♺ Rebasing ♺', github.event.pull_request.title)}}
-          update-mode: "replace"
+          labels: rebase-in-progress
+          number: ${{ github.event.number }}
       - name: automatic rebase
         uses: cirrus-actions/rebase@1.5
         env:
@@ -31,31 +28,22 @@ jobs:
         if: always()
         uses: actions-ecosystem/action-remove-labels@v1
         with:
-          labels: rebase
-      - name: Update Title Back
-        uses: actions-cool/issues-helper@v2
+          labels: |
+          rebase
+          rebase-in-progress
+      - name: Update PR Label in case of fail
+        if: failure()
+        - uses: actions-ecosystem/action-add-labels@v1
         with:
-          actions: "update-issue"
-          token: ${{ secrets.TEST_SECRET }}
-          issue-number: ${{ github.event.number }}
-          title: ${{github.event.pull_request.title}}
-          update-mode: "replace"
-      - name: Update PR Title in case of fail
-        # if: failure()
-        uses: actions-cool/issues-helper@v2
-        with:
-          actions: "update-issue"
-          token: ${{ secrets.TEST_SECRET }}
-          issue-number: ${{ github.event.number }}
-          title: ${{format('{0} ❗️ Rebase Failed ❗️', github.event.pull_request.title)}}
-          update-mode: "replace"
+          labels: rebase-failed
+          number: ${{ github.event.number }}
       - name: Failure comment
-        # if: failure()
+        if: failure()
         uses: actions-cool/issues-helper@v2
         with:
           actions: "create-comment"
           token: ${{ secrets.TEST_SECRET }}
           issue-number: ${{ github.event.number }}
           body: |
-            Rebase actin failed for some reason 🤔
+            Rebase action failed for some reason 🤔
             Check [Actions](https://github.com/Planable/planable-app/actions) or ask for help from DevOps.
