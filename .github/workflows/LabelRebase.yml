@@ -29,8 +29,8 @@ jobs:
         uses: actions-ecosystem/action-remove-labels@v1
         with:
           labels: |
-          rebase
-          rebase-in-progress
+            rebase
+            rebase-in-progress
       - name: Update PR Label in case of fail
         if: failure()
         - uses: actions-ecosystem/action-add-labels@v1
