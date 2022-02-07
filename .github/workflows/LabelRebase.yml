@@ -32,7 +32,7 @@ jobs:
             rebase
             rebase-in-progress
       - name: Update PR Label in case of fail
-        # if: failure()
+        if: failure()
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: rebase-failed

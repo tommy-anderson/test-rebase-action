@@ -15,14 +15,11 @@ jobs:
           emoji: "+1"
           token: ${{secrets.TEST_SECRET}}
           comment-id: ${{github.event.comment.id}}
-      - name: Temporarily Update PR Title
-        uses: actions-cool/issues-helper@v2
+      - name: Temporarily Update PR Label
+        uses: actions-ecosystem/action-add-labels@v1
         with:
-          actions: "update-issue"
-          token: ${{ secrets.TEST_SECRET }}
-          issue-number: ${{ github.event.issue.number }}
-          title: ${{format('{0} ♺ Rebasing ♺', github.event.issue.title)}}
-          update-mode: "replace"
+          labels: rebase-in-progress
+          number: ${{ github.event.issue.number }}
       - name: Checkout the latest code
         uses: actions/checkout@v2
         with:
@@ -32,15 +29,6 @@ jobs:
         uses: cirrus-actions/rebase@1.5
         env:
           GITHUB_TOKEN: ${{ secrets.TEST_SECRET }}
-      - name: Update Title Back
-        if: always()
-        uses: actions-cool/issues-helper@v2
-        with:
-          actions: "update-issue"
-          token: ${{ secrets.TEST_SECRET }}
-          issue-number: ${{ github.event.issue.number }}
-          title: ${{github.event.issue.title}}
-          update-mode: "replace"
       - name: Success emoji
         uses: actions-cool/emoji-helper@v1.0.0
         with:
@@ -56,15 +44,12 @@ jobs:
           emoji: "confused"
           token: ${{secrets.TEST_SECRET}}
           comment-id: ${{github.event.comment.id}}
-      - name: Update PR Title in case of fail
+      - name: Update PR Label in case of fail
         if: failure()
-        uses: actions-cool/issues-helper@v2
+        uses: actions-ecosystem/action-add-labels@v1
         with:
-          actions: "update-issue"
-          token: ${{ secrets.TEST_SECRET }}
-          issue-number: ${{ github.event.issue.number }}
-          title: ${{format('{0} ❗️ Rebase Failed ❗️', github.event.issue.title)}}
-          update-mode: "replace"
+          labels: rebase-failed
+          number: ${{ github.event.issue.number }}
       - name: Failure comment
         if: failure()
         uses: actions-cool/issues-helper@v2
